@@ -1,0 +1,22 @@
+USE WAREHOUSE COMPUTE_WH;
+USE DATABASE MIDTERM_DB;
+USE SCHEMA MIDTERM_DB.RAW;
+
+CREATE STORAGE INTEGRATION s3_int
+  TYPE = EXTERNAL_STAGE
+  STORAGE_PROVIDER = 'S3'
+  ENABLED = TRUE
+  STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::xxxxxxxx:role/mysnowflakerole'
+  STORAGE_ALLOWED_LOCATIONS = ('s3://xxxxxxxxxxxx/');
+
+-- Update Trust Policy
+DESC INTEGRATION s3_int;
+-- Add STORAGE_AWS_IAM_USER_ARN && STORAGE_AWS_EXTERNAL_ID in snowflake role
+
+-- Create an External Stage
+CREATE STAGE my_s3_stage
+    storage_integration = s3_int
+    url = 's3://xxxxxxxxxxxxxxxxx'
+    file_format = csv_comma_skip1_format;
+    
+DESC STAGE my_s3_stage;

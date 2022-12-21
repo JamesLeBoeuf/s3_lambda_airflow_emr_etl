@@ -1,0 +1,89 @@
+create or replace file format csv_comma_skip1_format
+type = 'CSV'
+field_delimiter = ','
+skip_header = 1;
+
+// https://bigdatadave.com/2020/03/21/snowflake-dynamic-unload-path-copy-into-location/
+----Step 1: Load today's data manually
+copy into '@my_s3_stage/inventory_2022-12-04.csv' from (select * from midterm_db.raw.inventory where cal_dt <= current_date())
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/sales_2022-12-04.csv' from (select * from midterm_db.raw.sales where trans_dt <= current_date())
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/store_2022-12-15.csv' from (select * from midterm_db.raw.store)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/product_2022-12-04.csv' from (select * from midterm_db.raw.product)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/calendar_2022-12-04.csv' from (select * from midterm_db.raw.calendar)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+
+
+----Step 2: Load tomorrow's data manually
+copy into '@my_s3_stage/inventory_2022-11-28.csv' from (select * from midterm_db.raw.inventory where cal_dt <= current_date()+1)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/sales_2022-11-28.csv' from (select * from midterm_db.raw.sales where trans_dt <= current_date()+1)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/store_2022-11-28.csv' from (select * from midterm_db.raw.store)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/product_2022-11-28.csv' from (select * from midterm_db.raw.product)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
+
+copy into '@my_s3_stage/calendar_2022-11-28.csv' from (select * from midterm_db.raw.calendar)
+file_format=(FORMAT_NAME=csv_comma_skip1_format, TYPE=CSV, COMPRESSION='None')
+single = true
+HEADER=true
+MAX_FILE_SIZE=107772160
+OVERWRITE=TRUE
+;
