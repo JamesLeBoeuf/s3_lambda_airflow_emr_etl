@@ -1,0 +1,61 @@
+removing images
+> docker rmi $(docker images -q) -f
+
+stopping containers
+> docker stop $(docker ps -q)
+
+removing containers
+> docker container prune
+
+
+building container from Dockerfile
+> docker build -t apache/superset .
+
+view newly created docker image
+> docker images
+
+run container in detached mode, port 8080:8088 with name superset
+> docker run -d -p 8080:8088 --name superset apache/superset:latest
+
+view newly created container
+> docker container ls
+
+With your local superset container already running setup your local admin account
+> docker exec -it superset superset fab create-admin \
+               --username admin \
+               --firstname Superset \
+               --lastname Admin \
+               --email admin@superset.com \
+               --password admin
+
+
+Update local DB to latest
+> docker exec -it superset superset db upgrade
+
+Load Examples (Optional)
+> docker exec -it superset superset load_examples
+
+Setup roles
+> docker exec -it superset superset init
+
+Connect to your instance using its Public DNS along with correct port
+Web browser> ec2-xx-xx-xx-xx.compute-1.amazonaws.com:8080
+
+Enter correct credentials
+Web browser> username: admin
+Web browser> password: admin
+
+Add athena database
+Web browser> Top right -> + sign -> Data -> Connect Database -> Or choose from a list of other databases we support:
+SUPPORTED DATABASES -> Amazon Athena
+
+Enter SQLAlchemy URI
+Web browser> awsathena+rest://{aws_access_key_id}:{aws_secret_access_key}@athena.{region_name}.amazonaws.com/{schema_name}?s3_staging_dir={s3_staging_dir}&work_group={work_group_name}
+awsathena+rest://aws_access_key_id:aws_secret_access_key@athena.us-east-1.amazonaws.com/wcd-de-midterm?s3_staging_dir=s3://wcd-de-midterm/data/&work_group=primary
+
+awsathena+rest - Recommended SQL Alchemy driver
+{aws_access_key_id} and {aws_secret_access_key} - Access key ID and Secret access key an IAM user for this project.
+{region_name} - Region of your Athena and S3 bucket (should match)
+{schema_name} - Athena table name
+{s3_staging_dir} - The URI of the S3 bucket where the Athena data is located (the location of the data used for Glue crawler)
+{work_group_name} -The name of the workgroup associated with the Athena data (primary is default)
