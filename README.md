@@ -1,4 +1,4 @@
-# wcd_de_midterm
+# snowflake-airflow-emr-lambda-superset
 
 This architecture mimics some companies’ ETL processes. For instance, this example illustrates where data files are sent directly to the company’s data lake (s3 bucket). For example, every day at 2am, data is dumped from the transactional database to s3 bucket(s), then an EMR cluster will execute the processed data. The processed data will then be stored in an output s3 bucket for the next day's usage. The processed data can then be used to power certain BI tools for analytical or statistical reporting.
 
